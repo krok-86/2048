@@ -1,7 +1,10 @@
 const resultDisplay = document.getElementById("result");
 const scoreDisplay = document.getElementById("score");
 const bestScoreDisplay = document.getElementById("bestScore");
-const startGame = document.getElementById("buttonNewGame");
+let sizeGame = localStorage.getItem("sizeGame") || 4;
+const fourGame = document.getElementById("four"); 
+const fiveGame = document.getElementById("five");
+const sixGame = document.getElementById("six");
 let bestScore = 0;
 let score = +localStorage.getItem("score");
 const bestValue = +localStorage.getItem("bestScore");
@@ -105,9 +108,16 @@ function handleDown() {
 }
 
 function moveRight() {
-  for (let i = 15; i > 0; i--) {
+  for (let i = sizeGame * sizeGame - 1; i > 0; i--) {
     if (numbers[i] == numbers[i - 1] || numbers[i - 1] == 0) {
-      if (i == 0 || i == 4 || i == 8 || i == 12) {
+      if (
+        i == 0 ||
+        i == sizeGame ||
+        i == sizeGame * 2 ||
+        i == sizeGame * 3 ||
+        i == sizeGame * 4 ||
+        i == sizeGame * 5
+      ) {
         continue;
       }
       countScore(numbers[i], numbers[i - 1]);
@@ -118,9 +128,16 @@ function moveRight() {
 }
 
 function moveLeft() {
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < sizeGame * sizeGame - 1; i++) {
     if (numbers[i] == numbers[i + 1] || numbers[i + 1] == 0) {
-      if (i == 3 || i == 7 || i == 11 || i == 15) {
+      if (
+        i == sizeGame - 1 ||
+        i == sizeGame * 2 - 1 ||
+        i == sizeGame * 3 - 1 ||
+        i == sizeGame * 4 - 1 ||
+        i == sizeGame * 5 - 1 ||
+        i == sizeGame * 6 - 1
+      ) {
         continue;
       }
       countScore(numbers[i], numbers[i + 1]);
@@ -131,32 +148,38 @@ function moveLeft() {
 }
 
 function moveUp() {
-  for (let i = 0; i < 12; i++) {
-    if (numbers[i] == numbers[i + 4] || numbers[i + 4] == 0) {
-      if (numbers[i] == numbers[i + 4]) {
-        countScore(numbers[i], numbers[i + 4]);
+  for (let i = 0; i < sizeGame * (sizeGame - 1); i++) {
+    if (numbers[i] == numbers[i + sizeGame] || numbers[i + sizeGame] == 0) {
+      if (numbers[i] == numbers[i + sizeGame]) {
+        countScore(numbers[i], numbers[i + sizeGame]);
       }
-      numbers[i] = numbers[i + 4] + numbers[i];
-      numbers[i + 4] = 0;
+      numbers[i] = numbers[i + sizeGame] + numbers[i];
+      numbers[i + sizeGame] = 0;
     }
   }
 }
 
 function moveDown() {
-  for (let i = 15; i > 3; i--) {
-    if (numbers[i] == numbers[i - 4] || numbers[i - 4] == 0) {
-      if (numbers[i] == numbers[i - 4]) {
-        countScore(numbers[i], numbers[i - 4]);
+  for (let i = sizeGame * sizeGame - 1; i > sizeGame - 1; i--) {
+    if (numbers[i] == numbers[i - sizeGame] || numbers[i - sizeGame] == 0) {
+      if (numbers[i] == numbers[i - sizeGame]) {
+        countScore(numbers[i], numbers[i - sizeGame]);
       }
-      numbers[i] = numbers[i - 4] + numbers[i];
-      numbers[i - 4] = 0;
+      numbers[i] = numbers[i - sizeGame] + numbers[i];
+      numbers[i - sizeGame] = 0;
     }
   }
 }
 
 function moveSlideRight() {
-  for (let i = 1; i < 16; i++) {
-    if (i == 4 || i == 8 || i == 12) {
+  for (let i = 1; i < sizeGame * sizeGame; i++) {
+    if (
+      i == sizeGame ||
+      i == sizeGame * 2 ||
+      i == sizeGame * 3 ||
+      i == sizeGame * 4 ||
+      i == sizeGame * 5
+    ) {
       continue;
     }
     if (numbers[i] === 0) {
@@ -168,8 +191,14 @@ function moveSlideRight() {
 }
 
 function moveSlideLeft() {
-  for (let i = 15; i > 0; i--) {
-    if (i == 4 || i == 8 || i == 12) {
+  for (let i = sizeGame * sizeGame - 1; i > 0; i--) {
+    if (
+      i == sizeGame ||
+      i == sizeGame * 2 ||
+      i == sizeGame * 3 ||
+      i == sizeGame * 4 ||
+      i == sizeGame * 5
+    ) {
       continue;
     }
     if (numbers[i - 1] === 0) {
@@ -182,9 +211,9 @@ function moveSlideLeft() {
 }
 
 function moveSlideDown() {
-  for (let i = 0; i < 12; i++) {
-    if (numbers[i + 4] === 0) {
-      numbers[i + 4] = numbers[i];
+  for (let i = 0; i < sizeGame * sizeGame - 5; i++) {
+    if (numbers[i + sizeGame] === 0) {
+      numbers[i + sizeGame] = numbers[i];
       numbers[i] = 0;
     }
   }
@@ -192,12 +221,9 @@ function moveSlideDown() {
 }
 
 function moveSlideUp() {
-  for (let i = 15; i > 3; i--) {
-    if (i == 0 || i == 1 || i == 2 || i == 3) {
-      continue;
-    }
-    if (numbers[i - 4] === 0) {
-      numbers[i - 4] = numbers[i];
+  for (let i = sizeGame * sizeGame - 1; i > sizeGame - 1; i--) {
+        if (numbers[i - sizeGame] === 0) {
+      numbers[i - sizeGame] = numbers[i];
       numbers[i] = 0;
     }
   }
@@ -211,11 +237,13 @@ function start(arr) {
   if (previousBoard) {
     previousBoard.remove();
   }
-  let board = document.createElement("div"); //почитать
+  let board = document.createElement("div");
   board.classList.add("board");
   board.id = "board";
+  board.style.width = sizeGame * 100 + "px";
+  board.style.height = sizeGame * 100 + "px";
   document.body.appendChild(board);
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < sizeGame * sizeGame; i++) {
     if (!arr[i]) {
       arr[i] = 0;
     }
@@ -234,16 +262,42 @@ function start(arr) {
     creatTwo();
     creatTwo();
   }
+  resultDisplay.innerText = "";
 }
-function preStart() {
+function preStartFour() {
   localStorage.removeItem("continueGame");
   localStorage.removeItem("score");
   score = 0;
   scoreDisplay.innerText = score;
+  sizeGame = 4;
+  localStorage.setItem("sizeGame", sizeGame);
+  start([]);
+  
+}
+fourGame.onclick = preStartFour;
 
+function preStartFive() {
+  localStorage.removeItem("continueGame");
+  localStorage.removeItem("score");
+  score = 0;
+  scoreDisplay.innerText = score;
+  sizeGame = 5;
+  localStorage.setItem("sizeGame", sizeGame);
   start([]);
 }
-startGame.onclick = preStart;
+fiveGame.onclick = preStartFive;
+
+function preStartSix() {
+  localStorage.removeItem("continueGame");
+  localStorage.removeItem("score");
+  score = 0;
+  scoreDisplay.innerText = score;
+  sizeGame = 6;
+  localStorage.setItem("sizeGame", sizeGame);
+  start([]);
+}
+sixGame.onclick = preStartSix;
+
 start(numbers);
 
 
@@ -252,7 +306,7 @@ function creatTwo() {
   let random = Math.random();
   let twoOrFour = random > 0.8 ? 4 : 2;
   do {
-    rounded = Math.floor(Math.random() * 16);
+    rounded = Math.floor(Math.random() * sizeGame * sizeGame);
   } while (numbers[rounded] !== 0);
   numbers[rounded] = twoOrFour;
   const target = document.getElementById(rounded.toString());
@@ -273,7 +327,7 @@ function countScore(current, next) {
 }
 
 function putArrDiv() {
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < sizeGame * sizeGame; i++) {
     const el = document.getElementById(i);
 
     el.innerText = numbers[i];
@@ -282,7 +336,7 @@ function putArrDiv() {
 }
 
 function checkForWin() {
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < sizeGame * sizeGame; i++) {
     if (numbers[i] == 2048) {
       resultDisplay.innerHTML = "You Win!";
     }
@@ -292,22 +346,38 @@ function checkForWin() {
 function checkGameOver() {
   let zero = 0;
   let counter = 0;
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < sizeGame * sizeGame - 1; i++) {
     if (numbers[i] === 0) {
       zero++;
       break;
     }
-    if (i != 3 && i != 7 && i != 11 && i !== 12 && i !== 13 && i !== 14) {
-      if (numbers[i] === numbers[i + 1] || numbers[i] === numbers[i + 4]) {
+    if (
+      i != sizeGame - 1 &&
+      i != sizeGame * 2 - 1 &&
+      i != sizeGame * 3 - 1 &&
+      i != sizeGame * 4 - 1 &&
+      i != sizeGame * 5 - 1 &&
+      i < sizeGame * (sizeGame - 1)
+    ) {
+      if (
+        numbers[i] === numbers[i + 1] ||
+        numbers[i] === numbers[i + sizeGame]
+      ) {
         counter++;
         break;
       }
-    } else if (i == 3 && i == 7 && i == 11) {
-      if (numbers[i] == numbers[i + 4]) {
+    } else if (
+      i == sizeGame - 1 ||
+      i == sizeGame * 2 - 1 ||
+      i == sizeGame * 3 - 1 ||
+      i == sizeGame * 4 - 1 ||
+      i == sizeGame * 5 - 1
+    ) {
+      if (numbers[i] == numbers[i + sizeGame]) {
         counter++;
         break;
       }
-    } else if (i == 12 && i == 13 && i == 14) {
+    } else if (i >= sizeGame * (sizeGame - 1)) {
       if (numbers[i] == numbers[i + 1]) {
         counter++;
         break;
@@ -342,7 +412,7 @@ function checkGameOver() {
 }
 
 function equalArrays(a, b) {
-  for (let i = 0; i < 16; i++) if (a[i] !== b[i]) return true;
+  for (let i = 0; i < sizeGame * sizeGame; i++) if (a[i] !== b[i]) return true;
   return false;
 }
 

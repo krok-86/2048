@@ -28,7 +28,7 @@ width: 500px
     align-items: center;
 }
 
-#buttonNewGame{
+#four {
     color: white;
     padding: 20px 30px;
     margin: 10px 20px;
@@ -42,8 +42,43 @@ width: 500px
     transition: .5s;
 }
 
-#buttonNewGame:hover{
+#four:hover {
     background-position: right center;
 }
   
+#five {
+    color: white;
+    padding: 20px 30px;
+    margin: 10px 20px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background-image: linear-gradient(to right, #9EEFE1 0%, #36f030 51%, #9EEFE1 100%);
+    background-size: 200% auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+    transition: .5s;
+}
+
+#five:hover {
+    background-position: right center;
+}
+
+#six {
+    color: white;
+    padding: 20px 30px;
+    margin: 10px 20px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background-image: linear-gradient(to right, #b5ef9e 0%, #f03030 51%, #d7ef9e 100%);
+    background-size: 200% auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+    transition: .5s;
+}
+
+#six:hover{
+    background-position: right center;
+}
  
